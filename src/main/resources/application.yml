@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: userMS
+
+  datasource:
+    username: root
+    password: root
+    url: "jdbc:mysql://localhost:3306/user_db?useSSL=false&allowMultiQueries=true&serverTimezone=UTC"
+  #    driver-class-name: com.mysql.jdbc.driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+server:
+  port: 8080
