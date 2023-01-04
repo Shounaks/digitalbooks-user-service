@@ -4,31 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="baf8d687-1cdc-4c0a-a911-2cca9628fd35" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="baf8d687-1cdc-4c0a-a911-2cca9628fd35" name="Changes" comment="Adding Security">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/AuthenticationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/AuthorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/DigitalBooksController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/security/AuthenticationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/security/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/security/RegisterRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/JwtService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/SecurityConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/UserServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/UserControllerAdvice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/UserControllerAdvice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/Book.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/BookSubscription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/BookSubscription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/Subscription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/Subscription.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/exception/ErrorInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/exception/ErrorInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/exception/UserServiceException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/exception/UserServiceException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/repository/SubscriberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/repository/SubscriberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/WebSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/WebSecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetails.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/CustomUserDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/WebSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/security/ApplicationConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/BookService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/SubscriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/SubscriptionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/digitalbooks/utils/ServiceUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/digitalbooks/utils/ServiceUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +35,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -70,12 +67,20 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Shounak/Desktop/Cognizant_Backend/user-service&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.digitalbooks.entity" />
+      <recent name="org.digitalbooks.security" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="UserServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.digitalbooks.UserServiceApplication" />
@@ -105,14 +110,27 @@
       <option name="presentableId" value="Default" />
       <updated>1672073485700</updated>
     </task>
+    <task id="LOCAL-00001" summary="Adding Logic">
+      <created>1672739262833</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1672739262833</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Adding Logic" />
+    <MESSAGE value="Adding Security" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding Security" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/service/BookService.java</url>
-          <line>53</line>
+          <line>59</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -127,23 +145,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java</url>
-          <line>32</line>
+          <line>33</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java</url>
-          <line>43</line>
+          <line>64</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/service/UserService.java</url>
-          <line>53</line>
+          <line>84</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/digitalbooks/controller/AuthorController.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.net.ConnectException" package="java.net" />

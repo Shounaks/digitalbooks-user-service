@@ -2,11 +2,18 @@ package org.digitalbooks.service;
 
 //import jakarta.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
+import org.digitalbooks.entity.Role;
 import org.digitalbooks.entity.User;
+import org.digitalbooks.entity.security.AuthenticationResponse;
+import org.digitalbooks.entity.security.LoginRequest;
+import org.digitalbooks.entity.security.RegisterRequest;
 import org.digitalbooks.exception.UserServiceException;
 import org.digitalbooks.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.digitalbooks.security.JwtService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,52 +22,70 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public Optional<User> retrieveUserById(Long userId){
-        return userRepository.findById(userId);
-    }
-
-    public Optional<User> retrieveUserByEmail(String email){
-        return userRepository.findByEmailId(email);
-    }
-
-    private static User hideUserPassword(User savedUser) {
-        return User.builder()
+    private static AuthenticationResponse hideUserPassword(User savedUser,String token) {
+        return AuthenticationResponse.builder()
+                .token(token)
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .emailId(savedUser.getEmailId())
                 .password("***************")//Hide the password and don't send the real Password
-                .subscriptions(savedUser.getSubscriptions())
                 .authorUser(savedUser.isAuthorUser())
                 .build();
     }
 
-    public User addUser(User user) {
-        Optional<User> optionalUser = userRepository.findByEmailId(user.getEmailId());
-        optionalUser.ifPresent(user1 -> {
-            throw new UserServiceException("Login Error: Email already Registered.");
-        });
-        user.setSubscriptions(new ArrayList<>());
-        User savedUser = userRepository.save(encodePassword(user));
-        return hideUserPassword(savedUser);
+    public Optional<User> retrieveUserById(Long userId) {
+        return userRepository.findById(userId);
     }
 
-    public User loginUser(String email, String password) {
-        User savedUser = userRepository
-                .findByEmailId(email)
-                .filter(user -> passwordEncoder.matches(password.trim(),user.getPassword()))
+    public Optional<User> retrieveUserByEmail(String email) {
+        return userRepository.findByEmailId(email);
+    }
+
+    public AuthenticationResponse addUser(RegisterRequest registerRequest) {
+        var user = User.builder()
+                .name(registerRequest.getName())
+                .emailId(registerRequest.getEmailId())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .subscriptions(new ArrayList<>())
+                .authorUser(registerRequest.isAuthorUser())
+                .role(registerRequest.isAuthorUser() ? Role.AUTHOR : Role.USER)
+                .build();
+        User newUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return hideUserPassword(newUser,jwtToken);
+
+//        Optional<User> optionalUser = userRepository.findByEmailId(user.getEmailId());
+//        optionalUser.ifPresent(user1 -> {
+//            throw new UserServiceException("Login Error: Email already Registered.");
+//        });
+//        user.setSubscriptions(new ArrayList<>());
+//        User savedUser = userRepository.save(encodePassword(user));
+//        return hideUserPassword(savedUser);
+    }
+
+    public AuthenticationResponse loginUser(LoginRequest registerRequest) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        registerRequest.getEmailId(),
+                        registerRequest.getPassword()
+                )
+        );
+        var user = userRepository.findByEmailId(registerRequest.getEmailId())
                 .orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
-        return hideUserPassword(savedUser);
-    }
-
-    private User encodePassword(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword().trim());
-        user.setPassword(encodedPassword);
-        return user;
+        var jwtToken = jwtService.generateToken(user);
+        return hideUserPassword(user,jwtToken);
+//        User savedUser = userRepository
+//                .findByEmailId(email)
+//                .filter(user -> passwordEncoder.matches(password.trim(),user.getPassword()))
+//                .orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
+//        return hideUserPassword(savedUser);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -28,14 +29,18 @@ public class BookService {
     }
 
     public Long addBook(Long authorId, Book book) {
-        userRepository.findById(authorId).orElseThrow(()-> new UserServiceException("Book Creation Error: AuthorID is invalid"));
+        User user = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Book Creation Error: AuthorID is invalid"));
+        if (!user.isAuthorUser()) throw new UserServiceException("Book Creation Error: User is not an author");
+
         String addBookUrl = "http://localhost:8081/api/v1/digitalbooks/" + authorId + "/books";
         ResponseEntity<Long> addedBook = new RestTemplate().postForEntity(addBookUrl, book, Long.class);
         return addedBook.getBody();
     }
 
     public Long updateBook(Long authorId, Long bookId, Book book) {
-        userRepository.findById(authorId).orElseThrow(()-> new UserServiceException("Book Creation Error: AuthorID is invalid"));
+        User user = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Book Creation Error: AuthorID is invalid"));
+        if (!user.isAuthorUser()) throw new UserServiceException("Book Update Error: User is not an author");
+
         String updateBookUrl = "http://localhost:8081/api/v1/digitalbooks/" + authorId + "/books/" + bookId;
         ResponseEntity<Long> updatedBook = new RestTemplate().exchange(updateBookUrl, HttpMethod.PUT, new HttpEntity<>(book), Long.class);
         return updatedBook.getBody();
@@ -43,7 +48,8 @@ public class BookService {
 
     public List<Book> searchBooksByAuthorId(Long authorId) {
         User user = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Author Not Found"));
-        if (!user.isAuthorUser()) throw new UserServiceException("User is not an author");
+        if (!user.isAuthorUser()) throw new UserServiceException("Book Search Error: User is not an author");
+
         String targetUrl = "http://localhost:8081/api/v1/digitalbooks/" + authorId + "/books";
         ResponseEntity<Book[]> booksByAuthor = new RestTemplate().getForEntity(targetUrl, Book[].class);
         return List.of(Objects.requireNonNull(booksByAuthor.getBody()));
@@ -57,9 +63,15 @@ public class BookService {
         bookSearchRequestParameters.put("price", price);
         bookSearchRequestParameters.put("publisher", publisher);
         ResponseEntity<Book[]> allBooksWithoutAuthorSearch = new RestTemplate().getForEntity(targetUrl, Book[].class, bookSearchRequestParameters);
-        //TODO: COMPLETE AUTHOR SEARCH
-        //        userRepository.findByNameContainsIgnoreCaseAllIgnoreCase(author).stream().filter(User::isAuthorUser).map(User::getId);
-        return Arrays.stream(Objects.requireNonNull(allBooksWithoutAuthorSearch.getBody())).collect(Collectors.toList());
+        List<Book> booksOfSameAuthor = userRepository.findByNameContainsIgnoreCaseAllIgnoreCase(author)
+                .stream()
+                .filter(User::isAuthorUser)
+                .map(User::getId)
+                .map(this::searchBooksByAuthorId)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        return Stream.concat(Arrays.stream(allBooksWithoutAuthorSearch.getBody()),booksOfSameAuthor.stream()).distinct().collect(Collectors.toList());
+//        return Arrays.stream(Objects.requireNonNull(allBooksWithoutAuthorSearch.getBody())).collect(Collectors.toList());
     }
 
     public Long toggleBookBlock(Long authorId, Long bookId, boolean block) {
@@ -67,7 +79,6 @@ public class BookService {
         User user = author.orElseThrow(() -> new UserServiceException("Block Error: Invalid Author ID!"));
         if (!user.isAuthorUser()) throw new UserServiceException("Block Error: User is not Author");
 
-        //SEND REQUEST
         String targetUrl = "http://localhost:8081/api/v1/digitalbooks/" + authorId + "/books/" + bookId + "?block={block}";
         HashMap<String, Boolean> blockRequestParameter = new HashMap<>();
         blockRequestParameter.put("block", block);
