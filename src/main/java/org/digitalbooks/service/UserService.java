@@ -30,7 +30,7 @@ public class UserService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private static AuthenticationResponse hideUserPassword(User savedUser,String token) {
+    private static AuthenticationResponse hideUserPassword(User savedUser, String token) {
         return AuthenticationResponse.builder()
                 .token(token)
                 .id(savedUser.getId())
@@ -50,8 +50,9 @@ public class UserService {
     }
 
     public AuthenticationResponse addUser(RegisterRequest registerRequest) {
-        userRepository.findByEmailId(registerRequest.getEmailId())
-                .ifPresent(x -> {throw new UserServiceException("User Registration Error: Email Already Registered");});
+        userRepository.findByEmailId(registerRequest.getEmailId()).ifPresent(x -> {
+            throw new UserServiceException("User Registration Error: Email Already Registered");
+        });
         var user = User.builder()
                 .name(registerRequest.getName())
                 .emailId(registerRequest.getEmailId())
@@ -60,34 +61,16 @@ public class UserService {
                 .authorUser(registerRequest.isAuthorUser())
                 .role(registerRequest.isAuthorUser() ? Role.AUTHOR : Role.USER)
                 .build();
+
         User newUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user.getEmailId());
-        return hideUserPassword(newUser,jwtToken);
-
-//        Optional<User> optionalUser = userRepository.findByEmailId(user.getEmailId());
-//        optionalUser.ifPresent(user1 -> {
-//            throw new UserServiceException("Login Error: Email already Registered.");
-//        });
-//        user.setSubscriptions(new ArrayList<>());
-//        User savedUser = userRepository.save(encodePassword(user));
-//        return hideUserPassword(savedUser);
+        return hideUserPassword(newUser, jwtToken);
     }
 
     public AuthenticationResponse loginUser(LoginRequest registerRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        registerRequest.getEmailId(),
-                        registerRequest.getPassword()
-                )
-        );
-        var user = userRepository.findByEmailId(registerRequest.getEmailId())
-                .orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(registerRequest.getEmailId(), registerRequest.getPassword()));
+        var user = userRepository.findByEmailId(registerRequest.getEmailId()).orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
         var jwtToken = jwtService.generateToken(user.getEmailId());
-        return hideUserPassword(user,jwtToken);
-//        User savedUser = userRepository
-//                .findByEmailId(email)
-//                .filter(user -> passwordEncoder.matches(password.trim(),user.getPassword()))
-//                .orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
-//        return hideUserPassword(savedUser);
+        return hideUserPassword(user, jwtToken);
     }
 }

@@ -1,7 +1,7 @@
 package org.digitalbooks.service;
 
 //import jakarta.transaction.Transactional;
-import org.digitalbooks.utils.ServiceUtils;
+
 import org.digitalbooks.entity.Book;
 import org.digitalbooks.entity.BookSubscription;
 import org.digitalbooks.entity.Subscription;
@@ -9,6 +9,7 @@ import org.digitalbooks.entity.User;
 import org.digitalbooks.exception.UserServiceException;
 import org.digitalbooks.repository.SubscriberRepository;
 import org.digitalbooks.repository.UserRepository;
+import org.digitalbooks.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class SubscriptionService {
                 .findFirst()
                 .ifPresentOrElse(o -> {
                     LocalDate subscriptionDatePlus24 = o.getSubscriptionDate().plusDays(1);//+24hrs
-                    if (!LocalDate.now().isAfter(subscriptionDatePlus24)){
+                    if (!LocalDate.now().isAfter(subscriptionDatePlus24)) {
                         user.getSubscriptions().remove(o);
                         subscriberRepository.delete(o);
                     }else throw new UserServiceException("Subscription Error: Subscription cannot be cancelled after 24 hrs");
@@ -59,11 +60,13 @@ public class SubscriptionService {
 
     public List<BookSubscription> retrieveSubscribedBooksForUser(Long userId) {
         User user = checkIfUserIsValid(userId);
-        return user.getSubscriptions().stream().map(subscription -> {
-            Long subscriptionId = subscription.getBookId();
-            Book book = ServiceUtils.getBookDataForBookId(subscriptionId);
-            return new BookSubscription(book,subscription);
-        }).collect(Collectors.toList());
+        return user.getSubscriptions().stream()
+                .map(subscription -> {
+                    Long subscriptionId = subscription.getBookId();
+                    Book book = ServiceUtils.getBookDataForBookId(subscriptionId);
+                    return new BookSubscription(book, subscription);
+                })
+                .collect(Collectors.toList());
     }
 
     private User checkIfUserAndBookAreValid(Long userId, Long bookId) {
@@ -72,6 +75,8 @@ public class SubscriptionService {
     }
 
     private User checkIfUserIsValid(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserServiceException("Subscriber Error: User Not Available"));
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserServiceException("Subscriber Error: User Not Available"));
     }
 }

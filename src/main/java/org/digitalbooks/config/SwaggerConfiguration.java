@@ -1,6 +1,7 @@
 package org.digitalbooks.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -10,10 +11,11 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.Collections;
 
+@Configuration
 public class SwaggerConfiguration {
     private ApiInfo apiInfo() {
-        return new ApiInfo("DigitalBookMS: Book-Service",
-                "Rest API For DigitalBook Microservice's Book-Service",
+        return new ApiInfo("DigitalBookMS: User-Service",
+                "Rest API For DigitalBook Microservice's User-Service",
                 "0.1",
                 "Terms of service",
                 new Contact("Shounak Bhalerao", "https://shounaks.github.io/personal/", "shounakbhalerao777@gmail.com"),

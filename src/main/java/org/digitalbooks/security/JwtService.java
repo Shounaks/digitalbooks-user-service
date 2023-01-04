@@ -28,7 +28,7 @@ public class JwtService {
         return generateToken(new HashMap<>(), email);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);//email
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -38,7 +38,7 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token,Claims::getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
 
     public String generateToken(Map<String, Object> extraClaims, String email) {
