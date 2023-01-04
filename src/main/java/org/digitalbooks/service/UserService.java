@@ -50,6 +50,8 @@ public class UserService {
     }
 
     public AuthenticationResponse addUser(RegisterRequest registerRequest) {
+        userRepository.findByEmailId(registerRequest.getEmailId())
+                .ifPresent(x -> {throw new UserServiceException("User Registration Error: Email Already Registered");});
         var user = User.builder()
                 .name(registerRequest.getName())
                 .emailId(registerRequest.getEmailId())
@@ -59,7 +61,7 @@ public class UserService {
                 .role(registerRequest.isAuthorUser() ? Role.AUTHOR : Role.USER)
                 .build();
         User newUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user.getEmailId());
         return hideUserPassword(newUser,jwtToken);
 
 //        Optional<User> optionalUser = userRepository.findByEmailId(user.getEmailId());
@@ -80,7 +82,7 @@ public class UserService {
         );
         var user = userRepository.findByEmailId(registerRequest.getEmailId())
                 .orElseThrow(() -> new UserServiceException("Login Error: User or Password Invalid"));
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user.getEmailId());
         return hideUserPassword(user,jwtToken);
 //        User savedUser = userRepository
 //                .findByEmailId(email)

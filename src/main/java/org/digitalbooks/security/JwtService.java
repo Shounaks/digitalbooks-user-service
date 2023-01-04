@@ -1,7 +1,5 @@
 package org.digitalbooks.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,8 +24,8 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(String email) {
+        return generateToken(new HashMap<>(), email);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
@@ -43,10 +41,10 @@ public class JwtService {
         return extractClaim(token,Claims::getExpiration);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, String email) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(convertUserDetailsToJSONString(userDetails))//Actually Returning Email :) wtf spring
+                .setSubject(email)//Actually Returning Email :) wtf spring
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -69,14 +67,5 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    private String convertUserDetailsToJSONString(UserDetails userDetails){
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(userDetails);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -21,10 +21,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .cors().disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests()
                 //Allow this patterns for all
-                .antMatchers("/api/v1/digitalbooks/**","/api/v1/digitalbooks/authentication/**")
+                .antMatchers("/swagger-resources/**","/v2/api-docs","/v3/api-docs", "/swagger-ui/**")
+                .permitAll()
+                .antMatchers("/api/v1/digitalbooks/books/**","/api/v1/digitalbooks/authentication/**")
                 .permitAll()
                 //Everything below this will be authenticated
                 .anyRequest()

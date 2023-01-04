@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/digitalbooks/")
+@RequestMapping("/api/v1/digitalbooks/books/")
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class DigitalBooksController {
@@ -25,7 +25,7 @@ public class DigitalBooksController {
         return ResponseEntity.ok(bookService.searchUsingQuery(category, title, author, price, publisher));
     }
 
-    @GetMapping("/{authorId}/books")
+    @GetMapping("/{authorId}")
     public ResponseEntity<List<Book>> searchBooksByAuthorId(@PathVariable Long authorId) {
         return ResponseEntity.ok(bookService.searchBooksByAuthorId(authorId));
     }

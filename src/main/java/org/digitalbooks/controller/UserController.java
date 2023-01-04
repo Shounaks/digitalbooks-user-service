@@ -15,10 +15,11 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/v1/digitalbooks/user/")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:4200","http://localhost:4200/subscribe","localhost:4200"})
+@CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;
     private final SubscriptionService subscriptionService;
+
     @GetMapping("/subscribe/{bookId}/{userId}")
     public ResponseEntity<Long> subscribeUserToBook(@PathVariable Long bookId, @PathVariable Long userId) {
         Long sizeOfSubscription = subscriptionService.subscribeToBook(userId, bookId);
