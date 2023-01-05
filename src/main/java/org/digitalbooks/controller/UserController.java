@@ -1,5 +1,6 @@
 package org.digitalbooks.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.digitalbooks.entity.BookSubscription;
 import org.digitalbooks.entity.User;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/v1/digitalbooks/user/")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwt_token_security")
 @CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;

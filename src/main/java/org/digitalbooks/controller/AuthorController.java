@@ -1,5 +1,6 @@
 package org.digitalbooks.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.digitalbooks.entity.Book;
 import org.digitalbooks.service.BookService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/digitalbooks/author/")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwt_token_security")
 @CrossOrigin("*")
 public class AuthorController {
     private final BookService bookService;

@@ -26,7 +26,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests()
                 //Allow this patterns for all
-                .antMatchers("/swagger-resources/**","/v2/api-docs","/v3/api-docs", "/swagger-ui/**")
+                .antMatchers("/swagger-resources/**","/v2/**","/v3/**", "/swagger-ui/**")
                 .permitAll()
                 .antMatchers("/api/v1/digitalbooks/books/**","/api/v1/digitalbooks/authentication/**")
                 .permitAll()
