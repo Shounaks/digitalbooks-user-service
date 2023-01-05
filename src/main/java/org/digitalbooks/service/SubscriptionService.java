@@ -2,6 +2,7 @@ package org.digitalbooks.service;
 
 //import jakarta.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import org.digitalbooks.entity.Book;
 import org.digitalbooks.entity.BookSubscription;
 import org.digitalbooks.entity.Subscription;
@@ -9,7 +10,6 @@ import org.digitalbooks.entity.User;
 import org.digitalbooks.exception.UserServiceException;
 import org.digitalbooks.repository.SubscriberRepository;
 import org.digitalbooks.repository.UserRepository;
-import org.digitalbooks.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +18,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.digitalbooks.service.BookService.getBookDataForBookId;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SubscriptionService {
     @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    SubscriberRepository subscriberRepository;
+    private final SubscriberRepository subscriberRepository;
 
     public Long subscribeToBook(Long userId, Long bookId) {
         User user = checkIfUserAndBookAreValid(userId, bookId);
@@ -63,14 +66,14 @@ public class SubscriptionService {
         return user.getSubscriptions().stream()
                 .map(subscription -> {
                     Long subscriptionId = subscription.getBookId();
-                    Book book = ServiceUtils.getBookDataForBookId(subscriptionId);
+                    Book book = getBookDataForBookId(subscriptionId);
                     return new BookSubscription(book, subscription);
                 })
                 .collect(Collectors.toList());
     }
 
     private User checkIfUserAndBookAreValid(Long userId, Long bookId) {
-        ServiceUtils.getBookDataForBookId(bookId);// Just check if book exists
+        getBookDataForBookId(bookId);// Just check if book exists
         return checkIfUserIsValid(userId);
     }
 

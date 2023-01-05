@@ -1,4 +1,4 @@
-package org.digitalbooks.security;
+package org.digitalbooks.config;
 
 import lombok.RequiredArgsConstructor;
 import org.digitalbooks.exception.UserServiceException;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+public class ApplicationConfiguration {
     private final UserRepository userRepository;
 
     @Bean
