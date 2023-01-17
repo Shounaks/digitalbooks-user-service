@@ -18,8 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.digitalbooks.service.BookService.getBookDataForBookId;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,6 +27,9 @@ public class SubscriptionService {
 
     @Autowired
     private final SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private final BookService bookService;
 
     public Long subscribeToBook(Long userId, Long bookId) {
         User user = checkIfUserAndBookAreValid(userId, bookId);
@@ -66,14 +67,14 @@ public class SubscriptionService {
         return user.getSubscriptions().stream()
                 .map(subscription -> {
                     Long subscriptionId = subscription.getBookId();
-                    Book book = getBookDataForBookId(subscriptionId);
+                    Book book = bookService.getBookDataForBookId(subscriptionId);
                     return new BookSubscription(book, subscription);
                 })
                 .collect(Collectors.toList());
     }
 
     private User checkIfUserAndBookAreValid(Long userId, Long bookId) {
-        getBookDataForBookId(bookId);// Just check if book exists
+        bookService.getBookDataForBookId(bookId);// Just check if book exists
         return checkIfUserIsValid(userId);
     }
 

@@ -7,6 +7,7 @@ import org.digitalbooks.entity.Book;
 import org.digitalbooks.entity.User;
 import org.digitalbooks.exception.UserServiceException;
 import org.digitalbooks.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,13 @@ import java.util.stream.Stream;
 @Transactional
 @RequiredArgsConstructor
 public class BookService {
-    private static final String BOOK_REPO_URL = "http://localhost:8081/api/v1/digitalbooks/";
+
+    @Value("${bookMS.url}")
+    private String BOOK_REPO_URL; //"http://localhost:8081/api/v1/digitalbooks/";
 
     private final UserRepository userRepository;
 
-    public static Book getBookDataForBookId(Long bookId) {
+    public Book getBookDataForBookId(Long bookId) {
         String retrieveBookUrl = BOOK_REPO_URL +"books/" + bookId;
         ResponseEntity<Book> bookResponse = new RestTemplate().getForEntity(retrieveBookUrl, Book.class);
         return Objects.requireNonNull(bookResponse.getBody());
@@ -38,9 +41,9 @@ public class BookService {
     }
 
     public Long addBook(Long authorId, Book book) {
-        User user = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Book Creation Error: AuthorID is invalid"));
-        if (!user.isAuthorUser()) throw new UserServiceException("Book Creation Error: User is not an author");
-
+        User author = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Book Creation Error: AuthorID is invalid"));
+        if (!author.isAuthorUser()) throw new UserServiceException("Book Creation Error: User is not an author");
+        if (!Objects.equals(author.getId(), book.getAuthorId())) throw new UserServiceException("You are not allowed to Change Book AuthorID");
         String addBookUrl = BOOK_REPO_URL + authorId + "/books";
         ResponseEntity<Long> addedBook = new RestTemplate().postForEntity(addBookUrl, book, Long.class);
         return addedBook.getBody();
@@ -48,12 +51,13 @@ public class BookService {
 
     public Long updateBook(Long authorId, Long bookId, Book book) {
         //Check if user is valid
-        User user = userRepository
+        User author = userRepository
                 .findById(authorId)
                 .orElseThrow(() -> new UserServiceException("Book Update Error: AuthorID is invalid"));
         //Check if user is Author; Can also be done by user.getRole().equals(Role.AUTHOR)
-        if (!user.isAuthorUser()) throw new UserServiceException("Book Update Error: User is not an author");
+        if (!author.isAuthorUser()) throw new UserServiceException("Book Update Error: User is not an author");
         //Check if bookId is valid - AUTOMATICALLY DONE BY BookMS
+        if (!Objects.equals(author.getId(), book.getAuthorId())) throw new UserServiceException("You are not allowed to Change Book AuthorID");
         //Check if user is AUTHOR OF THIS BOOK
         searchBooksByAuthorId(authorId).stream()
                 .map(Book::getBookId)
@@ -95,8 +99,8 @@ public class BookService {
 
     public Long toggleBookBlock(Long authorId, Long bookId, boolean block) {
         //Check if author is valid
-        User user = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Block Error: Invalid Author ID!"));
-        if (!user.isAuthorUser()) throw new UserServiceException("Block Error: User is not Author");
+        User author = userRepository.findById(authorId).orElseThrow(() -> new UserServiceException("Block Error: Invalid Author ID!"));
+        if (!author.isAuthorUser()) throw new UserServiceException("Block Error: User is not Author");
         //Check if bookId is valid - AUTOMATICALLY DONE BY BookMS
         //Check if user is AUTHOR OF THIS BOOK
         searchBooksByAuthorId(authorId).stream()
